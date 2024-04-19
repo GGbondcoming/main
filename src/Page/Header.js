@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import Weather from "./Component/Weather.js";
 import Inputbox from "./Component/input.js";
 import Box from "./Component/ListProductsInBox.js";
@@ -9,16 +9,55 @@ import { signOut } from "firebase/auth";
 import { auth } from "../firebase/firebase.js";
 
 function Header(props) {
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [ProductNums, setProductNums] = useState(0);
   const temperature = props.temperature;
   const weather = props.weather;
-
-  console.log(props.freeItems);
 
   function ButtonLink({ to, BtnName }) {
     return <Link to={to}>{BtnName}</Link>;
   }
 
   const boxRef = useRef(null);
+
+  useEffect(() => {
+    if (
+      props.items[props.Account] &&
+      props.freeItems[props.Account] &&
+      props.items[props.Account].length > 0 &&
+      props.freeItems[props.Account].length > 1
+    ) {
+      setProductNums(props.items[props.Account].length + 2);
+    } else if (
+      props.items[props.Account] &&
+      props.freeItems[props.Account] &&
+      props.items[props.Account].length === 0 &&
+      props.freeItems[props.Account].length > 1
+    ) {
+      setProductNums(2);
+    } else if (
+      props.items[props.Account] &&
+      props.freeItems[props.Account] &&
+      props.items[props.Account].length > 0 &&
+      props.freeItems[props.Account].length < 2
+    ) {
+      setProductNums(props.items[props.Account].length);
+    } else if (
+      props.items[props.Account] &&
+      props.freeItems[props.Account] &&
+      props.items[props.Account].length > 0 &&
+      props.freeItems[props.Account].length < 2
+    ) {
+      setProductNums(props.items[props.Account].length);
+    } else {
+      setProductNums(0);
+    }
+
+    if (!props.Account) {
+      setProductNums(0);
+    }
+  }, [props.items, props.freeItems, props.Account]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (boxRef.current && !boxRef.current.contains(event.target)) {
@@ -121,8 +160,19 @@ function Header(props) {
               }}
               class="flex flex-row h-auto w-8 ml-3 mr-4 pt-0.5 md:w-7 md:ml-2 md:mr-2 lg:mr-3 xl:mr-12 xl:ml-5"
             >
-              <img src="/CartBtn.png" />
-              <div class="ml-1 hidden xl:block text-white">CART</div>
+              <div>
+                <img src="/CartBtn.png" class=" min-w-7" />
+                {ProductNums > 0 ? (
+                  <div class=" text-white text-[15px] md:text-[12px] mb-3 bg-orange-400 rounded-full min-w-[23px] max-w-[23px] min-h-[23px] max-h-[23px] translate-x-[18px] translate-y-[-39px] md:min-w-[20px] md:max-w-[20px] md:min-h-[20px] md:max-h-[20px] md:translate-x-4 md:translate-y-[-33px]">
+                    {ProductNums}
+                  </div>
+                ) : (
+                  <div class=" text-white text-[15px] md:text-[12px] mb-3 bg-orange-400 rounded-full min-w-[23px] max-w-[23px] min-h-[23px] max-h-[23px] translate-x-[18px] translate-y-[-39px] md:min-w-[20px] md:max-w-[20px] md:min-h-[20px] md:max-h-[20px] md:translate-x-4 md:translate-y-[-33px]">
+                    0
+                  </div>
+                )}
+              </div>
+              <div class="ml-2 hidden xl:block text-white">CART</div>
             </button>
           </div>
         </div>
@@ -259,7 +309,7 @@ function Header(props) {
                           to="Checkout"
                           BtnName={
                             <button
-                              class="bg-blue-200 mt-4 ml-[150px] md:w-[110px] md:h-[35px] md:ml-[125px] font-bold rounded-xl shadow-md hover:bg-blue-300 hover:shadow-none active:bg-blue-400"
+                              class="bg-blue-200 mt-4 text-xl md:text-base ml-[135px] w-[130px] h-[45px] md:w-[110px] md:h-[35px] md:ml-[125px] font-bold rounded-xl shadow-md hover:bg-blue-300 hover:shadow-none active:bg-blue-400"
                               onClick={() => {
                                 props.updateIsOpenCart(!props.OpenCart);
                               }}

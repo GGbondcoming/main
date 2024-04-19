@@ -3,8 +3,8 @@ import PromotionSlider from "./Component/Slider";
 import withLoader from "./Component/withLoader";
 import { Link } from "react-router-dom";
 import { item } from "./Component/product";
+import SlotBtn from "./Component/SlotBtn";
 import PromotionBlock from "./Component/PromotionBlock";
-
 
 const Home = function (props) {
   const [weather, setWeather] = useState("");
@@ -196,6 +196,15 @@ const Home = function (props) {
       <PromotionBlock />
 
       {renderRecommendedProducts()}
+
+      {!props.Account && (
+        <SlotBtn LinkName="/Signin" updateFreeList={props.updateFreeList} />
+      )}
+
+      {props.freeItems[props.Account] &&
+        props.freeItems[props.Account][0] !== "Played" && (
+          <SlotBtn LinkName="/" updateFreeList={props.updateFreeList} />
+        )}
     </>
   );
 };

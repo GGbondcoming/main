@@ -14,17 +14,14 @@ const Checkout = function ({
   const [isCodeUse, setIsCodeUse] = useState(false);
   function PaidDeleteCart() {
     updateCart("Paid");
-  }
-
-  function PaidDeleteFreeList() {
     updateFreeList("Paid");
   }
 
   let freeProduct = [];
-  if (freeItems[Account].length > 1) {
-    freeProduct = freeItems[Account].splice(0, 1);
+  if (freeItems[Account] && freeItems[Account].length > 1) {
+    freeProduct = [freeItems[Account][1], freeItems[Account][2]];
   }
-
+  console.log(freeProduct);
   let PriceSum = 0;
   if (items[Account].length > 1) {
     items[Account].map((p) => {

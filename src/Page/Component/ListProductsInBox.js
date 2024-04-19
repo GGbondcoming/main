@@ -31,7 +31,7 @@ const Box = function ({
           {Items[CartAccount] &&
           FreeItems[CartAccount] &&
           Items[CartAccount].length === 0 &&
-          FreeItems[CartAccount].length < 1 ? (
+          FreeItems[CartAccount].length < 2 ? (
             <div class="text-center my-56 md:my-44 text-xl md:text-[15px] w-[400px] md:w-[350px]">
               No Product in Cart !
             </div>
